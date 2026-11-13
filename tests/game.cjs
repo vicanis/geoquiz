@@ -55,4 +55,8 @@ for(const code of ['JPN','IDN','PHL','NZL','PNG','GBR','FJI','BHS','SLB','VUT','
 }
 g.start('single');vm.runInContext("queue[0]='JPN'",context);g.answer('JPN');assert.equal(g.state().score,1);
 assert(g.territories.has('ITA:2'));assert(g.territories.has('RUS:8'));
+let capturedScale=0;projection.scale=value=>{capturedScale=value;return projection};
+vm.runInContext('k=1;mobileViewport.matches=false;transform()',context);assert.equal(capturedScale,225);
+vm.runInContext('mobileViewport.matches=true;transform()',context);assert.equal(capturedScale,900);
+vm.runInContext('k=2;transform()',context);assert.equal(capturedScale,1800);
 console.log('OK: top-100 geometry, modes, attempts, scoring, hints, reset and final results');

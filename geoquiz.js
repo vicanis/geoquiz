@@ -149,7 +149,9 @@ let longitude=0,latitude=20;
 const projection=d3.geoOrthographic().translate([500,260]).clipAngle(90).precision(.25);
 const globePath=d3.geoPath(projection);
 const ocean=document.createElementNS(svg.namespaceURI,'circle');ocean.setAttribute('fill','#287f9b');ocean.setAttribute('stroke','#102f43');ocean.setAttribute('stroke-width','1');svg.insertBefore(ocean,g);
-function transform(){projection.rotate([-longitude,-latitude]).scale(225*k);ocean.setAttribute('cx',500);ocean.setAttribute('cy',260);ocean.setAttribute('r',225*k);for(const p of paths.values())p.setAttribute('d',globePath({type:'Feature',geometry:p.__geometry})||'');}
+const mobileViewport=typeof matchMedia==='function'?matchMedia('(max-width: 767px)'):null;
+function transform(){const radius=225*k*(mobileViewport?.matches?4:1);projection.rotate([-longitude,-latitude]).scale(radius);ocean.setAttribute('cx',500);ocean.setAttribute('cy',260);ocean.setAttribute('r',radius);for(const p of paths.values())p.setAttribute('d',globePath({type:'Feature',geometry:p.__geometry})||'');}
+mobileViewport?.addEventListener?.('change',()=>transform());
 let rotationFrame=null;
 function stopRotation(){if(rotationFrame!==null){cancelAnimationFrame(rotationFrame);rotationFrame=null;}}
 function rotateTo(center,onComplete=()=>{}){
